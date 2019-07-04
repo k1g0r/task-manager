@@ -1,0 +1,36 @@
+    <IfModule mod_rewrite.c>
+        Options +FollowSymlinks
+        RewriteEngine On
+    </IfModule>
+     
+    <IfModule mod_rewrite.c>
+        # ssl
+        #RewriteCond %{SERVER_PORT} !^443$
+        #RewriteRule .* https://%{SERVER_NAME}%{REQUEST_URI} [R=301,L]
+        # ssl
+        # если /admin, то в backend
+        RewriteCond %{REQUEST_URI} ^/(admin)
+        RewriteRule ^admin/assets/(.*)$ backend/web/assets/$1 [L]
+        RewriteRule ^admin/css/(.*)$ backend/web/css/$1 [L]
+        RewriteRule ^admin/build/(.*)$ backend/web/build/$1 [L]
+        RewriteRule ^admin/vendors/(.*)$ backend/web/vendors/$1 [L]
+        RewriteRule ^admin/js/(.*)$ backend/web/js/$1 [L]
+        RewriteRule ^admin/images/(.*)$ backend/web/images/$1 [L]
+        RewriteRule ^admin/fonts/(.*)$ backend/web/fonts/$1 [L]
+        RewriteCond %{REQUEST_URI} !^/backend/web/(assets|js|css|js|images|fonts)/
+        RewriteCond %{REQUEST_URI} ^/(admin)
+        RewriteRule ^.*$ backend/web/index.php [L]
+
+        RewriteCond %{REQUEST_URI} ^/(assets|css|js|images)
+        RewriteRule ^assets/(.*)$ frontend/web/assets/$1 [L]
+        RewriteRule ^css/(.*)$ frontend/web/css/$1 [L]
+        RewriteRule ^js/(.*)$ frontend/web/js/$1 [L]
+        RewriteRule ^images/(.*)$ frontend/web/images/$1 [L]
+
+        RewriteRule ^(.*)$ frontend/web/$1 [L]
+        RewriteCond %{REQUEST_URI} !^/(frontend|backend)/web/(assets|css|js)/
+        RewriteCond %{REQUEST_URI} !index.php
+        RewriteCond %{REQUEST_FILENAME} !-f [OR]
+        RewriteCond %{REQUEST_FILENAME} !-d
+        RewriteRule ^.*$ frontend/web/index.php
+    </IfModule>
