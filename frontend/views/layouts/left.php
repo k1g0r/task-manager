@@ -7,9 +7,9 @@
                 'options' => ['class' => 'sidebar-menu tree', 'data-widget'=> 'tree'],
                 'items' => [
                     [
-                        'label' => Yii::t('app', 'Users'),
+                        'label' => Yii::t('app', 'Clients'),
                         'icon' => 'users',
-                        'url' => ['/user'],
+                        'url' => ['/clients'],
                     ],
                     [
                         'label' => Yii::t('app', 'Articles'),
