@@ -12,9 +12,9 @@
                         'url' => ['/clients'],
                     ],
                     [
-                        'label' => Yii::t('app', 'Articles'),
+                        'label' => Yii::t('app', 'Projects'),
                         'icon' => 'list',
-                        'url' => ['/articles'],
+                        'url' => ['/projects'],
                     ],
                     [
                         'label' => Yii::t('app', 'Parsers result'),

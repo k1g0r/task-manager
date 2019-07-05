@@ -5,6 +5,7 @@ namespace common\models;
 use common\behaviors\StatusBehavior;
 use Yii;
 use yii\behaviors\TimestampBehavior;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "clients".
@@ -60,5 +61,19 @@ class Clients extends \yii\db\ActiveRecord
             'otherContact' => Yii::t('app', 'Other Contact'),
             'note' => Yii::t('app', 'Note'),
         ];
+    }
+
+    public static function getMyClients()
+    {
+        return self::findAll(['account_id' => Yii::$app->user->identity->id]);
+    }
+
+    public static function getMyClientIds()
+    {
+        return ArrayHelper::map(self::getMyClients(), 'id', 'id');
+    }
+    public static function getMyClientNames()
+    {
+        return ArrayHelper::map(self::getMyClients(), 'id', 'name');
     }
 }

@@ -28,4 +28,9 @@ class Accounts extends User
         return 'accounts';
     }
 
+    public function getClients()
+    {
+        return $this->hasMany(Clients::class, ['account_id' => 'id']);
+    }
+
 }

@@ -3,18 +3,19 @@
 namespace frontend\controllers;
 
 use common\behaviors\StatusBehavior;
-use frontend\models\ClientsSearch;
-use Yii;
 use common\models\Clients;
+use Yii;
+use common\models\Projects;
+use frontend\models\ProjectsSearch;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * ClientsController implements the CRUD actions for Clients model.
+ * ProjectsController implements the CRUD actions for Projects model.
  */
-class ClientsController extends Controller
+class ProjectsController extends Controller
 {
     /**
      * {@inheritdoc}
@@ -41,13 +42,13 @@ class ClientsController extends Controller
     }
 
     /**
-     * Lists all Clients models.
+     * Lists all Projects models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new ClientsSearch();
-        $searchModel->account_id = Yii::$app->user->identity->id;
+        $searchModel = new ProjectsSearch();
+        $searchModel->client_id = Clients::getMyClientIds();
         $searchModel->status = StatusBehavior::STATUS_ACTIVE;
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
@@ -58,7 +59,7 @@ class ClientsController extends Controller
     }
 
     /**
-     * Displays a single Clients model.
+     * Displays a single Projects model.
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
@@ -71,19 +72,16 @@ class ClientsController extends Controller
     }
 
     /**
-     * Creates a new Clients model.
+     * Creates a new Projects model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Clients();
+        $model = new Projects();
 
-        if ($model->load(Yii::$app->request->post())) {
-            $model->account_id = Yii::$app->user->identity->id;
-            if ($model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
-            }
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->id]);
         }
 
         return $this->render('create', [
@@ -92,7 +90,7 @@ class ClientsController extends Controller
     }
 
     /**
-     * Updates an existing Clients model.
+     * Updates an existing Projects model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -103,10 +101,7 @@ class ClientsController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            $model->account_id = Yii::$app->user->identity->id;
-            if ($model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
-            }
+            return $this->redirect(['view', 'id' => $model->id]);
         }
 
         return $this->render('update', [
@@ -115,7 +110,7 @@ class ClientsController extends Controller
     }
 
     /**
-     * Deletes an existing Clients model.
+     * Deletes an existing Projects model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -131,15 +126,15 @@ class ClientsController extends Controller
     }
 
     /**
-     * Finds the Clients model based on its primary key value.
+     * Finds the Projects model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Clients the loaded model
+     * @return Projects the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Clients::findOne(['id' => $id, 'account_id' => Yii::$app->user->identity->id])) !== null) {
+        if (($model = Projects::findOne(['id' => $id, 'client_id' => Clients::getMyClientIds()])) !== null) {
             return $model;
         }
 
