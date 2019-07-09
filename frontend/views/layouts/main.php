@@ -16,7 +16,7 @@ if (Yii::$app->controller->action->id === 'login' || Yii::$app->controller->acti
     );
 } else {
 
-    backend\assets\AppAsset::register($this);
+    frontend\assets\AppAsset::register($this);
 
     dmstr\web\AdminLteAsset::register($this);
 

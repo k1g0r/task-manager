@@ -5,6 +5,7 @@ namespace common\models;
 use common\behaviors\StatusBehavior;
 use Yii;
 use yii\behaviors\TimestampBehavior;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "projects".
@@ -16,6 +17,7 @@ use yii\behaviors\TimestampBehavior;
  * @property int $created_at
  * @property int $updated_at
  * @property int $status
+ * @property int $hourPrice
  */
 class Projects extends \yii\db\ActiveRecord
 {
@@ -42,7 +44,7 @@ class Projects extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['client_id', 'created_at', 'updated_at', 'status'], 'integer'],
+            [['client_id', 'created_at', 'updated_at', 'status', 'hourPrice'], 'integer'],
             [['note'], 'string'],
             [['name'], 'string', 'max' => 255],
             ['client_id', 'validateClient'],
@@ -71,12 +73,36 @@ class Projects extends \yii\db\ActiveRecord
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
             'status' => Yii::t('app', 'Status'),
+            'hourPrice' => Yii::t('app', 'hourPrice'),
         ];
     }
 
-//    public function getMyProjects()
-//    {
-//        return self::findAll(['client_id' => Clients::getMyClientIds()]);
-//    }
+    /**
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function getPasswords()
+    {
+        return $this->hasMany(Passwords::class, ['id' => 'password_id'])
+            ->viaTable('project_password', ['project_id' => 'id']);
+    }
+
+    public static function getMyProjects()
+    {
+        return self::findAll(['client_id' => Clients::getMyClientIds()]);
+    }
+
+    public static function getMyProjectsIds()
+    {
+        return ArrayHelper::map(self::getMyProjects(), 'id', 'id');
+    }
+    public static function getMyProjectsNames()
+    {
+        return ArrayHelper::map(self::getMyProjects(), 'id', 'name');
+    }
+
+    public function getClient()
+    {
+        return $this->hasOne(Clients::class, ['id' => 'client_id']);
+    }
 
 }

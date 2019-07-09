@@ -2,6 +2,7 @@
 
 namespace frontend\models;
 
+use common\models\Clients;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use common\models\Projects;
@@ -17,9 +18,37 @@ class ProjectsSearch extends Projects
     public function rules()
     {
         return [
-            [['id', 'created_at', 'updated_at', 'status'], 'integer'],
+            [['id', 'created_at', 'updated_at', 'status', 'client_id'], 'integer'],
             [['name', 'note'], 'safe'],
         ];
+    }
+
+    /**
+     * Получаем список ид клиентов, по которым можно сделать выборку проектов
+     */
+    protected function getFilterAllowClients()
+    {
+        $clients = Clients::getMyClientIds(); // По умолчанию берем всех доступных клиентов
+
+        $r = $clients;
+
+        // Если введены ид проектов, то проверяем к каким из них есть доступ
+        if ($this->client_id) {
+            $r = [];
+            if (is_array($this->client_id) && count($this->client_id) > 0) {
+                foreach ($this->client_id as $client_id) {
+                    if (in_array($client_id, $clients)) {
+                        $r[] = $client_id;
+                    }
+                }
+            } else {
+                if (in_array($this->client_id, $clients)) {
+                    $r[] = $this->client_id;
+                }
+            }
+        }
+
+        return $r;
     }
 
     /**
@@ -56,10 +85,12 @@ class ProjectsSearch extends Projects
             return $dataProvider;
         }
 
+        $client_id = $this->getFilterAllowClients();
+
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'client_id' => $this->client_id,
+            'client_id' => $client_id,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
             'status' => $this->status,

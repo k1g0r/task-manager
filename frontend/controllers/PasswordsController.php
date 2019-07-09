@@ -2,20 +2,20 @@
 
 namespace frontend\controllers;
 
-use common\behaviors\StatusBehavior;
-use common\models\Clients;
-use Yii;
 use common\models\Projects;
-use frontend\models\ProjectsSearch;
+use Yii;
+use common\models\Passwords;
+use frontend\models\PasswordsSearch;
 use yii\filters\AccessControl;
 use yii\web\Controller;
+use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * ProjectsController implements the CRUD actions for Projects model.
+ * PasswordsController implements the CRUD actions for Passwords model.
  */
-class ProjectsController extends Controller
+class PasswordsController extends Controller
 {
     /**
      * {@inheritdoc}
@@ -42,13 +42,12 @@ class ProjectsController extends Controller
     }
 
     /**
-     * Lists all Projects models.
+     * Lists all Passwords models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new ProjectsSearch();
-        $searchModel->status = StatusBehavior::STATUS_ACTIVE;
+        $searchModel = new PasswordsSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -57,8 +56,22 @@ class ProjectsController extends Controller
         ]);
     }
 
+    public function actionCopy($id)
+    {
+        $r = ['error' => ''];
+        if (Yii::$app->request->isAjax) {
+            Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+            $model = $this->findModel($id);
+            $r['pass'] = $model->password;
+        } else {
+            $r['error'] = 'Only ajax request!';
+        }
+
+        return $r;
+    }
+
     /**
-     * Displays a single Projects model.
+     * Displays a single Passwords model.
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
@@ -71,13 +84,13 @@ class ProjectsController extends Controller
     }
 
     /**
-     * Creates a new Projects model.
+     * Creates a new Passwords model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Projects();
+        $model = new Passwords();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -89,7 +102,7 @@ class ProjectsController extends Controller
     }
 
     /**
-     * Updates an existing Projects model.
+     * Updates an existing Passwords model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -109,7 +122,7 @@ class ProjectsController extends Controller
     }
 
     /**
-     * Deletes an existing Projects model.
+     * Deletes an existing Passwords model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -125,15 +138,24 @@ class ProjectsController extends Controller
     }
 
     /**
-     * Finds the Projects model based on its primary key value.
+     * Finds the Passwords model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Projects the loaded model
+     * @return Passwords the loaded model
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws ForbiddenHttpException
      */
     protected function findModel($id)
     {
-        if (($model = Projects::findOne(['id' => $id, 'client_id' => Clients::getMyClientIds()])) !== null) {
+        if (($model = Passwords::findOne($id)) !== null) {
+            // проверяем есть ли доступ к этому паролю
+            $projects = Projects::getMyProjectsIds(); // доступные проекты
+            foreach ($model->projectIds as $projectsId) {
+                if (!in_array($projectsId, $projects)) {
+                    // если хоть один проект не доступен
+                    throw new ForbiddenHttpException(Yii::t('app', 'Not accept'));
+                }
+            }
             return $model;
         }
 

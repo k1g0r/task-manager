@@ -17,12 +17,21 @@
                         'url' => ['/projects'],
                     ],
                     [
-                        'label' => Yii::t('app', 'Parsers result'),
+                        'label' => Yii::t('app', 'Passwords'),
+                        'icon' => 'lock',
+                        'url' => ['/passwords'],
+                    ],
+                    [
+                        'label' => Yii::t('app', 'Tasks'),
+                        'icon' => 'lock',
+                        'url' => ['/tasks'],
+                    ],
+                    [
+                        'label' => Yii::t('app', 'Stats'),
                         'icon' => 'history',
                         'url' => '#',
                         'items' => [
-                            ['label' => Yii::t('app', 'Parse Exist'), 'icon' => 'cogs', 'url' => ['/parse-exist'],],
-                            ['label' => Yii::t('app', 'Parse Autopiter'), 'icon' => 'cogs', 'url' => ['/parse-autopiter'],],
+                            ['label' => Yii::t('app', 'Stats'), 'icon' => 'cogs', 'url' => ['/'],],
                         ],
                     ],
                 ],
