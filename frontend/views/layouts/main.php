@@ -55,7 +55,7 @@ if (Yii::$app->controller->action->id === 'login' || Yii::$app->controller->acti
     </div>
 
     <div id="modalBoxAjax" class="modal fade">
-        <div class="modal-dialog modal-lgf. ">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <!-- Заголовок модального окна -->
                 <div class="modal-header">
