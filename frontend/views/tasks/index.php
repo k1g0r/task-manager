@@ -47,14 +47,27 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'attribute' => 'time',
                 'value' => function ($model) {
-                    return $model->getTimeStr();
-                }
+                    $time = $model->getTimeStr();
+                    $timeForTotal = $model->getTimeForTotal();
+                    $colorNeed = $timeForTotal > $model->time ? 'font-green' : 'font-red';
+                    return "Затрачено: $time" .
+                        ($timeForTotal ?
+                            "<br> Эквивалент к итогу: <span class='$colorNeed'>" . $model->getTimeStr($timeForTotal) . '</span>' :
+                            ''
+                        );
+                },
+                'format' => 'raw'
             ],
             [
                 'attribute' => 'total',
                 'value' => function ($model) {
-                    return $model->total . ' руб.';
-                }
+                    $totalForTime = $model->getTotalForTime();
+                    $diffTotal = $model->total - $totalForTime;
+                    $diffTotalHtml = $diffTotal > 0 ? '+' . $diffTotal : $diffTotal;
+                    $colorNeed = $diffTotal < 0 ? 'font-red' : 'font-green';
+                    return "Итого: $model->total руб. " . ($diffTotal != $model->total ? "<span class='$colorNeed'>($diffTotalHtml руб.)</span>" : '');
+                },
+                'format' => 'raw'
             ],
             [
                 'class' => 'yii\grid\ActionColumn',

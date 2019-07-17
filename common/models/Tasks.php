@@ -134,18 +134,57 @@ class Tasks extends \yii\db\ActiveRecord
         return parent::beforeSave($insert);
     }
 
-    public function getTimeStr()
+    /**
+     * Переводим минуты в удобный формат
+     * @param null $time
+     * @return int|string
+     */
+    public function getTimeStr($time = null)
     {
         $r = 0;
+        $time = $time == null ? $this->time : $time;
 
-        if ($this->time) {
-            if ($this->time < 60) {
-                $r = $this->time . 'м';
+        if ($time) {
+            if ($time < 60) {
+                $r = $time . 'м';
             } else {
-                $hour = intval($this->time / 60);
-                $min = $this->time - ($hour * 60);
+                $hour = intval($time / 60);
+                $min = $time - ($hour * 60);
                 $r = $hour . 'ч ' . $min . 'м';
             }
+        }
+
+        return $r;
+    }
+
+    /**
+     * Подсчет неоплаченного времени в задаче
+     * Сколько времени мы должны были потратить чтобы получить сумму которая написана в итоге
+     */
+    public function getTimeForTotal()
+    {
+        $r = null;
+        $timeFromTotal = $this->total / $this->hoursPrice; // получаем время за которое мы должны получить указанную сумму
+        $timeFromTotal = round($timeFromTotal * 60); // переводим в минуты
+        if ($timeFromTotal != $this->time) {
+            $r = $timeFromTotal;
+        }
+
+        return $r;
+    }
+
+    /**
+     * Сколько должны были заплатить
+     * @return float|null
+     */
+    public function getTotalForTime()
+    {
+        $r = null;
+
+        $total = floor($this->hoursPrice * ($this->time / 60)); // округляем в меньшую сторону
+
+        if ($total != $this->total) {
+            $r = $total;
         }
 
         return $r;

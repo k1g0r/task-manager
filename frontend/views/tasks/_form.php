@@ -72,7 +72,7 @@ $this->registerJs(<<<JS
       var hourPrice = $('#tasks-hoursprice').val();
       var time = $('#tasks-time').val();
       
-      $('#tasks-total').val(hourPrice * (time / 60));
+      $('#tasks-total').val(Math.floor(hourPrice * (time / 60)));
     });
 
 JS

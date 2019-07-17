@@ -118,3 +118,11 @@ a.desc:after {
 .nav > li > form > button.logout:focus {
     outline: none;
 }
+
+.font-green {
+    color: #288050;
+}
+
+.font-red {
+    color: #ff646e;
+}
