@@ -23,7 +23,7 @@
                     ],
                     [
                         'label' => Yii::t('app', 'Tasks'),
-                        'icon' => 'lock',
+                        'icon' => 'tasks',
                         'url' => ['/tasks'],
                     ],
                     [

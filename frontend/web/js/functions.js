@@ -6,3 +6,10 @@ function copyToClipboard(copy) {
     document.execCommand('copy');
     document.body.removeChild(copytext);
 }
+
+// Удаляем данные в окне чтобы данные всегда грузились заного
+$(function() {
+    $('body').on('hidden.bs.modal', '.modalBoxAjax', function () {
+        $(this).removeData('bs.modal');
+    });
+});
