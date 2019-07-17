@@ -125,10 +125,10 @@ class Tasks extends \yii\db\ActiveRecord
 
     public function beforeSave($insert)
     {
-        if ($this->status == self::STATUS_WAIT_PAYMENT) {
+        if ($this->waiting_at == null && $this->status == self::STATUS_WAIT_PAYMENT) {
             $this->waiting_at = time();
         }
-        if ($this->status == self::STATUS_PAYMENT) {
+        if ($this->payment_at == null && $this->status == self::STATUS_PAYMENT) {
             $this->payment_at = time();
         }
         return parent::beforeSave($insert);
