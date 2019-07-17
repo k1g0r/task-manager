@@ -2,6 +2,7 @@
 
 use yii\grid\GridView;
 use yii\helpers\Html;
+use common\behaviors\StatusBehavior;
 
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\ClientsSearch */
@@ -31,11 +32,34 @@ $this->params['breadcrumbs'][] = $this->title;
                 'filter' => $searchModel->getStatuses(),
             ],
             [
-                'label' => 'Проекты',
+                'label' => 'Проекты (Активные/Всего)',
                 'value' => function ($model) {
-        return 0;
-                    return count(Yii::$app->user->identity->clients->projects);
-                }
+                    return Html::a(
+                        $model->getProjects()->andWhere(['status' => StatusBehavior::STATUS_ACTIVE])->count()
+                        . ' / ' .
+                        $model->getProjects()->count(),
+                        [
+                            '/projects',
+                            'ProjectsSearch' => [
+                                'status' => StatusBehavior::STATUS_ACTIVE,
+                                'client_id' => $model->id
+                            ]
+                        ]
+                    );
+                },
+                'format' => 'raw'
+            ],
+            [
+                'label' => 'Выплаты',
+                'value' => function ($model) {
+                    $info = $model->totalPriceInfo();
+                    $diffTotalHtml = $info['diffTotal'] > 0 ? '+' . $info['diffTotal'] : $info['diffTotal'];
+                    $class = $info['diffTotal'] < 0 ? 'font-red' : 'font-green';
+                    return "Всего выплачено: {$info['total']} руб.<br>
+                            Переплата: <span class='$class'>$diffTotalHtml  руб.</span><br>
+                            В процессе: {$info['wait']}  руб.";
+                },
+                'format' => 'raw'
             ],
             ['class' => 'yii\grid\ActionColumn'],
         ],

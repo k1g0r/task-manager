@@ -1,3 +1,9 @@
+<?php
+
+use common\behaviors\StatusBehavior;
+
+?>
+
 <aside class="main-sidebar">
 
     <section class="sidebar">
@@ -24,7 +30,11 @@
                     [
                         'label' => Yii::t('app', 'Tasks'),
                         'icon' => 'tasks',
-                        'url' => ['/tasks'],
+                        'url' => ['/tasks',
+                                'TasksSearch' => [
+                                        'status' => StatusBehavior::STATUS_ACTIVE
+                                ]
+                        ],
                     ],
                     [
                         'label' => Yii::t('app', 'Stats'),

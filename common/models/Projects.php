@@ -105,4 +105,36 @@ class Projects extends \yii\db\ActiveRecord
         return $this->hasOne(Clients::class, ['id' => 'client_id']);
     }
 
+    public function getTasks()
+    {
+        return $this->hasMany(Tasks::class, ['project_id' => 'id']);
+    }
+
+    /**
+     * Информация о выплатах по проекту
+     * @return array
+     */
+    public function totalPriceInfo()
+    {
+        $total = 0; // оплачено
+        $diffTotal = 0; // насколько больше/меньше оплачено
+        $wait = 0; // активные задачи
+        foreach ($this->tasks as $task) {
+            if ($task->status == Tasks::STATUS_PAYMENT) {
+                $totalForTime = $task->getTotalForTime();
+                $diff = $totalForTime !== null ? $task->total - $totalForTime : 0;
+                $total += $task->total;
+                $diffTotal += $diff;
+            } else {
+                $wait += $task->total;
+            }
+        }
+
+        return [
+            'total' => $total,
+            'diffTotal' => $diffTotal,
+            'wait' => $wait,
+        ];
+    }
+
 }

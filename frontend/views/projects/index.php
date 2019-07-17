@@ -1,8 +1,9 @@
 <?php
 
+use common\behaviors\StatusBehavior;
+use common\models\Clients;
 use yii\grid\GridView;
 use yii\helpers\Html;
-use common\models\Clients;
 
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\ProjectsSearch */
@@ -23,13 +24,13 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
             [
-                    'label' => 'Client',
-                    'attribute' => 'client_id',
-                    'value' => function ($model) {
-                        return $model->client->name;
-                    },
+                'label' => 'Client',
+                'attribute' => 'client_id',
+                'value' => function ($model) {
+                    return $model->client->name;
+                },
                 'filter' => Clients::getMyClientNames(),
-],
+            ],
             'name',
             'note:ntext',
             [
@@ -38,10 +39,34 @@ $this->params['breadcrumbs'][] = $this->title;
                 'filter' => $searchModel->getStatuses(),
             ],
             [
-                'label' => 'Активные задачи',
+                'label' => 'Задачи (Активные/Всего)',
                 'value' => function ($model) {
-                    return 0;
-                }
+                    return Html::a(
+                        $model->getTasks()->andWhere(['status' => StatusBehavior::STATUS_ACTIVE])->count()
+                        . ' / ' .
+                        $model->getTasks()->count(),
+                        [
+                            '/tasks',
+                            'TasksSearch' => [
+                                'status' => StatusBehavior::STATUS_ACTIVE,
+                                'project_id' => $model->id
+                            ]
+                        ]
+                    );
+                },
+                'format' => 'raw'
+            ],
+            [
+                'label' => 'Выплаты',
+                'value' => function ($model) {
+                    $info = $model->totalPriceInfo();
+                    $diffTotalHtml = $info['diffTotal'] > 0 ? '+' . $info['diffTotal'] : $info['diffTotal'];
+                    $class = $info['diffTotal'] < 0 ? 'font-red' : 'font-green';
+                    return "Всего выплачено: {$info['total']} руб.<br>
+                            Переплата: <span class='$class'>$diffTotalHtml  руб.</span><br>
+                            В процессе: {$info['wait']}  руб.";
+                },
+                'format' => 'raw'
             ],
             [
                 'class' => 'yii\grid\ActionColumn',

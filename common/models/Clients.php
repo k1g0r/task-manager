@@ -76,4 +76,32 @@ class Clients extends \yii\db\ActiveRecord
     {
         return ArrayHelper::map(self::getMyClients(), 'id', 'name');
     }
+
+    public function getProjects()
+    {
+        return $this->hasMany(Projects::class, ['client_id' => 'id']);
+    }
+
+    /**
+     * Информация о выплатах по клиенту
+     * @return array
+     */
+    public function totalPriceInfo()
+    {
+        $total = 0; // оплачено
+        $diffTotal = 0; // насколько больше/меньше оплачено
+        $wait = 0; // активные задачи
+        foreach ($this->projects as $project) {
+            $info = $project->totalPriceInfo();
+            $total += $info['total'];
+            $diffTotal += $info['diffTotal'];
+            $wait += $info['wait'];
+        }
+
+        return [
+            'total' => $total,
+            'diffTotal' => $diffTotal,
+            'wait' => $wait,
+        ];
+    }
 }

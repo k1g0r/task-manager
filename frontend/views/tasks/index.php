@@ -71,7 +71,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'class' => 'yii\grid\ActionColumn',
-                'template' => '{pass} {view} {update} {delete}',
+                'template' => '{paymentStatus} {pass} {view} {update} {delete}',
                 'buttons' => [
                     'pass' => function ($model, $key, $index) {
                         $icon = Html::tag('span', '', ['class' => "glyphicon glyphicon-lock"]);
@@ -83,6 +83,13 @@ $this->params['breadcrumbs'][] = $this->title;
                                 'data-target' => '#modalBoxAjax'
                             ]
                         );
+                    },
+                    'paymentStatus' => function ($model, $key, $index) {
+                        $projectInfo = $key->project->totalPriceInfo();
+//                        var_dump($key->project_id); exit();
+                        $class = $projectInfo['diffTotal'] >= 0 ? 'green' : 'red';
+                        $icon = Html::tag('span', '', ['class' => "glyphicon glyphicon-list font-$class"]);
+                        return Html::a($icon, ['/projects', 'ProjectsSearch' => ['id' => $key->project_id]]);
                     }
                 ]
             ],
