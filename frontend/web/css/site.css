@@ -126,3 +126,7 @@ a.desc:after {
 .font-red {
     color: #ff646e;
 }
+
+.ui-widget table {
+    font-size: 14px;
+}

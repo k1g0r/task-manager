@@ -46,9 +46,31 @@ class TasksController extends Controller
     public function actionIndex()
     {
         $searchModel = new TasksSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $count = [
+            Tasks::STATUS_ACTIVE => $searchModel->getQuery(['TasksSearch' => ['status' => Tasks::STATUS_ACTIVE]])->count(),
+            Tasks::STATUS_DELETED => $searchModel->getQuery(['TasksSearch' => ['status' => Tasks::STATUS_DELETED]])->count(),
+            Tasks::STATUS_DISABLED => $searchModel->getQuery(['TasksSearch' => ['status' => Tasks::STATUS_DISABLED]])->count(),
+            Tasks::STATUS_MODERATE => $searchModel->getQuery(['TasksSearch' => ['status' => Tasks::STATUS_MODERATE]])->count(),
+            Tasks::STATUS_WAIT => $searchModel->getQuery(['TasksSearch' => ['status' => Tasks::STATUS_WAIT]])->count(),
+            Tasks::STATUS_WAIT_PAYMENT => $searchModel->getQuery(['TasksSearch' => ['status' => Tasks::STATUS_WAIT_PAYMENT]])->count(),
+            Tasks::STATUS_PAYMENT => $searchModel->getQuery(['TasksSearch' => ['status' => Tasks::STATUS_PAYMENT]])->count(),
+        ];
 
         return $this->render('index', [
+            'count' => $count,
+        ]);
+    }
+
+    public function actionAjaxIndex()
+    {
+        if (!Yii::$app->request->isAjax) {
+            return;
+        }
+        $searchModel = new TasksSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider->setPagination(['pageSize' => 10]);
+
+        return $this->renderAjax('_indexAjax', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);

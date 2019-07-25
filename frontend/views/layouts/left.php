@@ -30,11 +30,7 @@ use common\behaviors\StatusBehavior;
                     [
                         'label' => Yii::t('app', 'Tasks'),
                         'icon' => 'tasks',
-                        'url' => ['/tasks',
-                                'TasksSearch' => [
-                                        'status' => StatusBehavior::STATUS_ACTIVE
-                                ]
-                        ],
+                        'url' => ['/tasks'],
                     ],
                     [
                         'label' => Yii::t('app', 'Stats'),

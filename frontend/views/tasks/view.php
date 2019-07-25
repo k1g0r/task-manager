@@ -22,6 +22,13 @@ $this->params['breadcrumbs'][] = $this->title;
                 'method' => 'post',
             ],
         ]) ?>
+        <?= Html::a(Yii::t('app', 'Passwords'),
+            ['passwords/index', 'PasswordsSearch' => ['project_id' => $model->project_id]],
+            [
+                'data-toggle' => 'modal',
+                'data-target' => '#modalBoxAjax',
+                'class' => 'btn btn-primary'
+            ]) ?>
     </p>
 
     <?= DetailView::widget([

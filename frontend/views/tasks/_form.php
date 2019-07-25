@@ -5,6 +5,7 @@ use common\models\Tasks;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use \yii\jui\DatePicker;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\Tasks */
@@ -40,15 +41,25 @@ if (!$model->isNewRecord && $model->hoursPrice == '') {
             <?= $form->field($model, 'status')->dropDownList($model->statuses) ?>
         </div>
 
-        <div class="col-md-4">
+        <div class="col-md-3">
             <?= $form->field($model, 'hoursPrice')->textInput() ?>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
             <?= $form->field($model, 'time')->textInput() ?>
         </div>
 
-        <div class="col-md-4">
+        <div class="col-md-3">
             <?= $form->field($model, 'total')->textInput() ?>
+        </div>
+
+        <div class="col-md-3">
+            <?= $form->field($model, 'deadline')->widget(DatePicker::class, [
+                'language' => 'ru',
+                'dateFormat' => 'dd.MM.yyyy',
+                'options' => [
+                        'class' => 'form-control'
+                ]
+            ]) ?>
         </div>
 
         <div class="col-md-12">
@@ -59,6 +70,13 @@ if (!$model->isNewRecord && $model->hoursPrice == '') {
             <?= $form->field($model, 'resultText')->textarea(['rows' => 6]) ?>
             <div class="form-group">
                 <?= Html::submitButton(Yii::t('app', 'Save'), ['class' => 'btn btn-success']) ?>
+                <?= Html::a(Yii::t('app', 'Passwords'),
+                    ['passwords/index', 'PasswordsSearch' => ['project_id' => $model->project_id]],
+                    [
+                        'data-toggle' => 'modal',
+                        'data-target' => '#modalBoxAjax',
+                        'class' => 'btn btn-primary'
+                    ]) ?>
             </div>
         </div>
     </div>

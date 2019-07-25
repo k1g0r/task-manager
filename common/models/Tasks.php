@@ -23,6 +23,7 @@ use yii\helpers\ArrayHelper;
  * @property int $updated_at
  * @property int $waiting_at
  * @property int $payment_at
+ * @property int $deadline_at
  */
 class Tasks extends \yii\db\ActiveRecord
 {
@@ -74,8 +75,9 @@ class Tasks extends \yii\db\ActiveRecord
     {
         return [
             [['project_id', 'parent_id', 'hoursPrice', 'time', 'total', 'status'], 'integer'],
-            [['created_at', 'updated_at', 'waiting_at', 'payment_at'], 'integer'],
-            [['taskText', 'resultText'], 'string'],
+            [['created_at', 'updated_at', 'waiting_at', 'payment_at', 'deadline_at'], 'integer'],
+            [['deadline_at'], 'default', 'value' => null],
+            [['taskText', 'resultText', 'deadline'], 'string'],
             [['name'], 'string', 'max' => 255],
         ];
     }
@@ -96,6 +98,7 @@ class Tasks extends \yii\db\ActiveRecord
             'time' => Yii::t('app', 'Time'),
             'total' => Yii::t('app', 'Total'),
             'status' => Yii::t('app', 'Status'),
+            'deadline' => Yii::t('app', 'Deadline'),
         ];
     }
 
@@ -188,6 +191,16 @@ class Tasks extends \yii\db\ActiveRecord
         }
 
         return $r;
+    }
+
+    public function getDeadline()
+    {
+        return $this->deadline_at ? date("d.m.Y", $this->deadline_at) : null;
+    }
+
+    public function setDeadline($date = null)
+    {
+        $this->deadline_at = $date ? strtotime($date) : null;
     }
 
 }
