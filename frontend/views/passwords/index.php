@@ -53,7 +53,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                 ['passwords/copy', 'id' => $key->id],
                                 [
                                     'class' => 'copyPassword1',
-                                    'onclick' => 'copyToClipboard(\'' . $key->password . '\'); alert("copy password"); return false;'
+                                    'onclick' => 'copyToClipboard(\'' . $key->password . '\');'
                                 ]
                             );
                         }
@@ -67,9 +67,16 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <?php
 $this->registerJs(<<<JS
+$(document).on('click', '.copyPassword1', function (e) {
+    e.preventDefault();
+    var t = this;
+    $(t).addClass("green");
+    setTimeout(function () {
+        $(t).removeClass("green");
+    }, 1000);
+});
 $(document).on('click', '.copyPassword', function (e) {
     e.preventDefault();
-    
     var t = this;
     var dataPass = $(t).attr('data-pass');
     if (dataPass != undefined) {
@@ -77,7 +84,7 @@ $(document).on('click', '.copyPassword', function (e) {
         // alert("Пароль скопирован в буфер \\n Переделай в форму с проверкой данных!");
         return false;
     }
-    
+
     var url = $(this).attr('href');
     // Делаем запрос на пароль
     $.ajax({
@@ -94,8 +101,8 @@ $(document).on('click', '.copyPassword', function (e) {
                 alert('Error!');
             }
         },
-        error: function() {
-          alert('Ошибка запроса!');
+        error: function () {
+            alert('Ошибка запроса!');
         }
     });
 });

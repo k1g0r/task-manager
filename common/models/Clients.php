@@ -91,17 +91,20 @@ class Clients extends \yii\db\ActiveRecord
         $total = 0; // оплачено
         $diffTotal = 0; // насколько больше/меньше оплачено
         $wait = 0; // активные задачи
+        $del = 0; // удаленные задачи
         foreach ($this->projects as $project) {
             $info = $project->totalPriceInfo();
             $total += $info['total'];
             $diffTotal += $info['diffTotal'];
             $wait += $info['wait'];
+            $del += $info['del'];
         }
 
         return [
             'total' => $total,
             'diffTotal' => $diffTotal,
             'wait' => $wait,
+            'del' => $del,
         ];
     }
 }

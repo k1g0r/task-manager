@@ -119,8 +119,11 @@ class Projects extends \yii\db\ActiveRecord
         $total = 0; // оплачено
         $diffTotal = 0; // насколько больше/меньше оплачено
         $wait = 0; // активные задачи
+        $del = 0;
         foreach ($this->tasks as $task) {
-            if ($task->status == Tasks::STATUS_PAYMENT) {
+            if ($task->status == Tasks::STATUS_DELETED) {
+                $del += $task->total;
+            } elseif ($task->status == Tasks::STATUS_PAYMENT) {
                 $totalForTime = $task->getTotalForTime();
                 $diff = $totalForTime !== null ? $task->total - $totalForTime : 0;
                 $total += $task->total;
@@ -134,6 +137,7 @@ class Projects extends \yii\db\ActiveRecord
             'total' => $total,
             'diffTotal' => $diffTotal,
             'wait' => $wait,
+            'del' => $del
         ];
     }
 

@@ -130,3 +130,75 @@ a.desc:after {
 .ui-widget table {
     font-size: 14px;
 }
+
+.ui-tabs .ui-tabs-panel {
+    font-size: 12px;
+}
+
+.ui-widget.ui-tabs {
+    padding: 0;
+}
+
+.ui-tabs-nav {
+    border: none;
+    border-bottom: 1px solid #ddd;
+    border-bottom-color: rgb(221, 221, 221);
+    background: #fff;
+    font-size: 14px;
+}
+
+.ui-tabs .ui-tabs-nav {
+    margin: 0;
+    padding: 0;
+    border-bottom-color: #f4f4f4;
+    border-top-right-radius: 3px;
+    border-top-left-radius: 3px;
+}
+
+.ui-tabs .ui-tabs-nav > li {
+    border-top: 3px solid transparent;
+    border-top-color: transparent;
+    margin-bottom: -2px;
+    margin-right: 5px;
+    background: none;
+    border-color: #fff;
+    margin: 0;
+    border-radius: 0;
+}
+
+.ui-tabs .ui-tabs-nav > li.ui-tabs-active {
+    border-color: #f4f4f4;
+    border-top-color: #3c8dbc;
+}
+
+.ui-tabs .ui-tabs-nav > li.ui-tabs-active a {
+    background: #fff;
+}
+
+.ui-tabs .ui-tabs-nav > li:first-of-type {
+    margin-left: 0;
+}
+
+.table > tbody > tr > td {
+    font-size: 12px;
+}
+
+.ui-widget-content a {
+    font-size: 12px;
+}
+
+.table a {
+    color: #000;
+}
+.table a:hover {
+    color: #3b3a40;
+}
+
+.copyPassword1 {
+    transition: color 1s ease 1s;
+}
+
+.copyPassword1.green {
+    color: #3a803d;
+    transition: color 0.1s ease;
+}
