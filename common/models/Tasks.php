@@ -112,6 +112,14 @@ class Tasks extends \yii\db\ActiveRecord
         return $this->hasOne(self::class, ['id' => 'parent_id']);
     }
 
+    /**
+     * Поулчаем список ид элементов модели, к которым есть доступ
+     */
+    public function getMy()
+    {
+        return self::getMyTasksIds();
+    }
+
     public static function getMyTasks()
     {
         return self::findAll(['project_id' => Projects::getMyProjectsIds()]);

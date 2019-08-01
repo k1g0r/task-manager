@@ -1,11 +1,15 @@
 <?php
 
 use common\models\Projects;
+use frontend\widgets\editable\EditableWidget;
 use yii\grid\GridView;
 use yii\helpers\Html;
 use yii\widgets\Pjax;
 
+
 $time = time();
+$pjaxId = 'pjax-job-gridview' . $time;
+$gridId = 'job-gridview' . $time;
 
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\TasksSearch */
@@ -14,12 +18,12 @@ $time = time();
 ?>
 <div class="tasks-index">
     <?php Pjax::begin([
-        'id' => 'pjax-job-gridview' . $time,
+        'id' => $pjaxId,
         'enablePushState' => false
     ]); ?>
 
     <?= GridView::widget([
-        'id'=>'job-gridview' . $time,
+        'id' => $gridId,
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
@@ -43,8 +47,25 @@ $time = time();
             'name',
             [
                 'attribute' => 'status',
-                'value' => 'statusTitle',
+                'value' => function ($model) use ($pjaxId) {
+                    return EditableWidget::widget([
+                        'name' => 'status',
+                        'pk' => $model->id,
+                        'value' => $model->status,
+                        'title' => Yii::t('app', 'Status'),
+                        'inputType' => EditableWidget::INPUT_DROPDOWN_LIST,
+                        'source' => $model->getStatuses(),
+                        'url' => [
+                            '/edit-table/change',
+                            'model' => \common\models\Tasks::class,
+                            'id' => $model->id,
+                            'attribute' => 'status'
+                        ],
+                        'inputClass' => 'form-control',
+                    ]);
+                },
                 'filter' => $searchModel->getStatuses(),
+                'format' => 'raw'
             ],
             [
                 'attribute' => 'time',

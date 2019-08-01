@@ -1,10 +1,8 @@
 <?php
 
-use common\models\Projects;
-use yii\grid\GridView;
+use common\models\Tasks;
 use yii\helpers\Html;
 use yii\jui\Tabs;
-use common\models\Tasks;
 
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\TasksSearch */
@@ -50,7 +48,10 @@ $this->params['breadcrumbs'][] = $this->title;
             'url' => ['ajax-index', 'TasksSearch' => ['status' => Tasks::STATUS_PAYMENT]],
         ],
     ],
-    'options' => ['tag' => 'div'],
+    'options' => [
+            'tag' => 'div',
+        'class' => 'nav-tabs-custom'
+    ],
     'itemOptions' => ['tag' => 'div'],
     'headerOptions' => ['class' => 'my-class'],
     'clientOptions' => ['collapsible' => false],
