@@ -77,9 +77,24 @@ class Tasks extends \yii\db\ActiveRecord
             [['project_id', 'parent_id', 'hoursPrice', 'time', 'total', 'status'], 'integer'],
             [['created_at', 'updated_at', 'waiting_at', 'payment_at', 'deadline_at'], 'integer'],
             [['deadline_at'], 'default', 'value' => null],
+            ['hoursPrice', 'defaultPrice', 'skipOnEmpty' => false],
+            [['total', 'time'], 'default', 'value' => 0],
             [['taskText', 'resultText', 'deadline'], 'string'],
             [['name'], 'string', 'max' => 255],
         ];
+    }
+
+    /**
+     * При добавлении задачи без указания часовой ставки, подставляем ее из проекта
+     * @param $attribute
+     * @param $params
+     */
+    public function defaultPrice($attribute, $params)
+    {
+        $hp = $this->$attribute;
+        if (!$hp) {
+            $this->$attribute = $this->project->hourPrice;
+        }
     }
 
     /**

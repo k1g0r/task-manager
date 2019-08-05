@@ -16,9 +16,6 @@ $this->registerJs(<<<JS
 JS
 );
 
-if (!$model->isNewRecord && $model->hoursPrice == '') {
-    $model->hoursPrice = $model->project->hourPrice;
-}
 ?>
 
 <div class="tasks-form">
