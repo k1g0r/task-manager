@@ -86,18 +86,21 @@ class Projects extends \yii\db\ActiveRecord
             ->viaTable('project_password', ['project_id' => 'id']);
     }
 
-    public static function getMyProjects()
+    public static function getMyProjects($order = null)
     {
-        return self::findAll(['client_id' => Clients::getMyClientIds()]);
+        return self::find()
+            ->where(['client_id' => Clients::getMyClientIds()])
+            ->orderBy($order)
+            ->all();
     }
 
-    public static function getMyProjectsIds()
+    public static function getMyProjectsIds($order = null)
     {
-        return ArrayHelper::map(self::getMyProjects(), 'id', 'id');
+        return ArrayHelper::map(self::getMyProjects($order), 'id', 'id');
     }
-    public static function getMyProjectsNames()
+    public static function getMyProjectsNames($order = null)
     {
-        return ArrayHelper::map(self::getMyProjects(), 'id', 'name');
+        return ArrayHelper::map(self::getMyProjects($order), 'id', 'name');
     }
 
     public function getClient()

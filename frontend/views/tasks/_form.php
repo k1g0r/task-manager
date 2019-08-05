@@ -27,7 +27,7 @@ if (!$model->isNewRecord && $model->hoursPrice == '') {
 
     <div class="row">
         <div class="col-md-4">
-            <?= $form->field($model, 'project_id')->dropDownList(Projects::getMyProjectsNames(), [
+            <?= $form->field($model, 'project_id')->dropDownList(Projects::getMyProjectsNames(['name' => SORT_ASC]), [
                 'class' => 'chosen'
             ]) ?>
         </div>
