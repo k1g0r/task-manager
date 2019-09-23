@@ -21,6 +21,7 @@ if (Yii::$app->controller->action->id === 'login' || Yii::$app->controller->acti
     dmstr\web\AdminLteAsset::register($this);
 
     $directoryAsset = Yii::$app->assetManager->getPublishedUrl('@vendor/almasaeed2010/adminlte/dist');
+    $directoryAssetAdvanced = Yii::$app->assetManager->getPublishedUrl('@vendor/almasaeed2010/adminlte/brower_components');
     ?>
     <?php $this->beginPage() ?>
     <!DOCTYPE html>

@@ -171,13 +171,26 @@ class Tasks extends \yii\db\ActiveRecord
         $time = $time == null ? $this->time : $time;
 
         if ($time) {
-            if ($time < 60) {
-                $r = $time . 'м';
-            } else {
-                $hour = intval($time / 60);
-                $min = $time - ($hour * 60);
-                $r = $hour . 'ч ' . $min . 'м';
-            }
+            $r = self::timeStr($time);
+        }
+
+        return $r;
+    }
+
+    /**
+     * Переводим минуты в удобный формат
+     * @param null $time
+     * @return int|string
+     */
+    public static function timeStr($time)
+    {
+        $r = $time;
+        if ($time < 60) {
+            $r = $time . 'м';
+        } else {
+            $hour = intval($time / 60);
+            $min = $time - ($hour * 60);
+            $r = $hour . 'ч ' . $min . 'м';
         }
 
         return $r;

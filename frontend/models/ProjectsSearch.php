@@ -69,7 +69,7 @@ class ProjectsSearch extends Projects
      */
     public function search($params)
     {
-        $query = Projects::find();
+        $query = $this->getQuery($params);
 
         // add conditions that should always apply here
 
@@ -77,12 +77,19 @@ class ProjectsSearch extends Projects
             'query' => $query,
         ]);
 
+        return $dataProvider;
+    }
+
+    public function getQuery($params = [])
+    {
+        $query = Projects::find();
+
         $this->load($params);
 
         if (!$this->validate()) {
             // uncomment the following line if you do not want to return any records when validation fails
             // $query->where('0=1');
-            return $dataProvider;
+            return $query;
         }
 
         $client_id = $this->getFilterAllowClients();
@@ -99,6 +106,6 @@ class ProjectsSearch extends Projects
         $query->andFilterWhere(['like', 'name', $this->name])
             ->andFilterWhere(['like', 'note', $this->note]);
 
-        return $dataProvider;
+        return $query;
     }
 }

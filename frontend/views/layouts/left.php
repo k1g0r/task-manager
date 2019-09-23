@@ -1,9 +1,3 @@
-<?php
-
-use common\behaviors\StatusBehavior;
-
-?>
-
 <aside class="main-sidebar">
 
     <section class="sidebar">
@@ -37,7 +31,7 @@ use common\behaviors\StatusBehavior;
                         'icon' => 'history',
                         'url' => '#',
                         'items' => [
-                            ['label' => Yii::t('app', 'Stats'), 'icon' => 'cogs', 'url' => ['/'],],
+                            ['label' => Yii::t('app', 'Stats'), 'icon' => 'cogs', 'url' => ['/stats'],],
                         ],
                     ],
                 ],

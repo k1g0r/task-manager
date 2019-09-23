@@ -29,6 +29,14 @@ $gridId = 'job-gridview' . $time;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
             [
+                'attribute' => 'client_id',
+                'value' => function ($model) {
+                    return $model->project->client ? $model->project->client->name : null;
+                },
+                'format' => 'raw',
+                'filter' => \common\models\Clients::getMyClientNames()
+            ],
+            [
                 'attribute' => 'project_id',
                 'value' => function ($model) {
                     return $model->project ? $model->project->name : null;
