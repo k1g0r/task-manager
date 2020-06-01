@@ -89,7 +89,6 @@ class StatsController extends Controller
      * Выводим отчет по выплаченным суммам по месецам за определенный год
      * @param $year
      * @return mixed
-     * @throws ForbiddenHttpException
      */
     public function actionReportOnYear($year = null)
     {
@@ -129,8 +128,8 @@ class StatsController extends Controller
     {
         // Выбираем все задачи за этот период (ожидание оплаты и оплаченные)
         $tasks = Tasks::find()
-            ->where(['>', 'payment_at', $dateInterval['from']])
-            ->andWhere(['<', 'payment_at', $dateInterval['to']])
+            ->where(['>', $fieldDate, $dateInterval['from']])
+            ->andWhere(['<', $fieldDate, $dateInterval['to']])
             ->all();
 
         $r = [
